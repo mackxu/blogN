@@ -1,0 +1,24 @@
+<%- include('common/header') %>
+<div class="container post-container">
+	<div class="row">
+		<div class="col-md-2">
+			<a href="/posts?author=zhangsan" class="avatar">
+				<img class="avatar-cover" src="/images/avatar.jpg" alt="">
+			</a>
+		</div>
+		<div class="col-md-10 post-wrapper">
+			<form role="form" action="/edit" method="post">
+				<div class="form-group">
+					<label for="post-title">标题<span class="text-danger">*</span></label>
+					<input type="text" class="form-control" id="post-title" name="title" value="hello world">
+				</div>
+				<div class="form-group">
+					<label for="post-content">内容<span class="text-danger">*</span></label>
+					<textarea name="content" class="form-control" id="post-content" rows="10">good work</textarea>
+				</div>
+				<button type="submit" class="btn btn-success">提交</button>
+			</form>
+		</div>
+	</div>
+</div>
+<%- include('common/footer') %>

@@ -6,6 +6,7 @@ let flash = require('connect-flash')
 let config = require('config-lite')
 let winston = require('winston')
 let expressWinston = require('express-winston')
+let morgan = require('morgan')
 let routes = require('./routes')
 let pkg = require('./package')
 
@@ -27,27 +28,42 @@ app.use(session({
 	cookie: {
 		maxAge: config.session.maxAge
 	},
-	store: new MongoStore({ url: config.mongodb })		// 将session存储到mongodb
+	// store: new MongoStore({ url: config.mongodb })		// 将session存储到mongodb
 }))
 // flash 显示通知
 app.use(flash())
+
+// body-parse
+app.use(require('express-formidable')({
+	uploadDir: path.join(__dirname, 'public/images'),
+	keepExtensions: true
+}));
+
+// 设置模板全局常量
 app.locals.blog = {
 	title: pkg.name,
 	description: pkg.description
 }
 
 // 添加模板必须的三个变量
-
+app.use(function(req, res, next){
+	res.locals.user = req.session.user;
+	res.locals.success = req.flash('success').toString();
+	res.locals.error = req.flash('error').toString();
+	next();
+})
 // 正常请求的日志
-app.use(expressWinston.logger({
-	transports: [
-		new winston.transports.Console({
-			json: true,
-			colorize: true
-		})
-	],
-	msg: "HTTP {{req.method}} {{req.url}}"
-}))
+// app.use(expressWinston.logger({
+// 	transports: [
+// 		new winston.transports.Console({
+// 			json: true,
+// 			colorize: true
+// 		})
+// 	]
+// }))
+
+app.use(morgan('short'))
+
 // 路由
 routes(app)
 

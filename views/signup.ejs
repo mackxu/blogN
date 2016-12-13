@@ -1,0 +1,57 @@
+<%- include('common/header') %>
+<div class="container">
+	<div class="row">
+		<div class="col-md-4"></div>
+		<div class="col-md-4">
+			<form class="form-horizontal" role="form" action="/signup" method="post" enctype="multipart/form-data">
+			  <div class="form-group">
+			    <label for="username" class="col-sm-3 control-label signup-label">用户名:</label>
+			    <div class="col-sm-9">
+			    	<input name="uname" type="text" class="form-control" id="username" placeholder="your name">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="passwd" class="col-sm-3 control-label signup-label">密码:</label>
+			    <div class="col-sm-9">
+			    	<input name="passwd" type="password" class="form-control" id="passwd" placeholder="Password">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="passwd-again" class="col-sm-3 control-label signup-label">确认密码:</label>
+			    <div class="col-sm-9">
+			    	<input name="repasswd" type="password" class="form-control" id="passwd-again" placeholder="Password again">
+			    </div>
+
+			  </div>
+			  <div class="form-group">
+		      <label for="sex" class="col-sm-3 control-label signup-label">性别:</label>
+		      <div class="col-sm-9">
+		      	<select name="sex" id="sex" class="form-control" name="gender">
+			        <option>男</option>
+			        <option>女</option>
+			      </select>
+		      </div>
+		    </div>
+			  <div class="form-group">
+			    <label for="avatar" class="col-sm-3 control-label signup-label">头像:</label>
+			    <div class="col-sm-9">
+			    	<input name="avatar" type="file" id="avatar">
+			    </div>
+			  </div>
+			  <div class="form-group">
+			    <label for="avatar" class="col-sm-3 control-label signup-label">个人简介:</label>
+			    <div class="col-sm-9">
+			    	<textarea name="bio" class="form-control" rows="3"></textarea>
+			    </div>
+			  </div>
+			  <div class="form-group">
+			  	<div class="col-sm-offset-3 col-sm-9">
+			  		<button type="submit" class="btn btn-primary btn-block">注册</button>
+			  	</div>
+			  </div>
+			</form>
+		</div>
+		<div class="col-md-4"></div>
+	</div>
+</div>
+<%- include('common/footer') %>

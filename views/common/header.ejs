@@ -2,6 +2,32 @@
 <html>
   <head>
   	<meta name="viewport" content="width=device-width">
-  	<link rel="stylesheet" href="http://apps.bdimg.com/libs/bootstrap/3.3.4/css/bootstrap.css">
+  	<title><%= title %></title>
+  	<link rel="stylesheet" href="/css/bootstrap.css">
+  	<link rel="stylesheet" href="/css/blogs.css">
   </head>
   <body>
+  <header class="container container-header">
+  	<nav class="header-nav pull-right">
+  		<a href="/signin" class="text-danger">请登录</a>
+  		<a href="/signup">注册</a>
+
+  		<span class="text-success">zhangsan</span>
+  		<a href="/create" class="text-primary">发布新文章</a>
+  	</nav>
+  	<div class="header-title text-center">
+  		<h1 class="text-success">BlogN</h1>
+  		<h4 class="text-muted">blogs blogs</h4>
+  	</div>
+  	<% if (error) { %>
+  	<div class="notification bg-danger">
+  		<span class="text-danger"><%= error %></span>
+  	</div>
+  	<% } %>
+  	<% if(success){ %>
+  	<div class="notification bg-success">
+  		<span class="text-success"><%= success %></span>
+  	</div>
+  	<% } %>
+  </header>
+

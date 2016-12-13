@@ -6,8 +6,7 @@ let checkLogin = require('../middlewares/check').checkLogin
 // GET /posts所有用户或者特定用户的文章页
 // eg: GET /posts?author=xxx
 router.get('/', function (req, res, next) {
-	// res.send(req.flash())
-	res.render('user')
+	res.render('posts', { title: "主页" })
 })
 // POST /posts 发表一篇文章
 router.post('/', checkLogin, function (req, res, next) {
@@ -15,15 +14,21 @@ router.post('/', checkLogin, function (req, res, next) {
 })
 // GET /posts/create 发表文章页
 router.get('/create', checkLogin, function (req, res, next) {
-	res.send(req.flash())
+	res.render('post-create', {
+		title: '发布一篇文章'
+	})
 })
 // GET /posts/:postId 文章详情页
 router.get('/:postId', function(req, res) {
-	res.send(req.flash())
+	res.render('post', {
+		title: '一篇文章'
+	})
 })
 // GET /posts/:postId/edit 更新文章页
 router.get('/:postId/edit', checkLogin, function(req, res) {
-	res.send(req.flash())
+	res.render('post-edit', {
+		title: '编辑'
+	})
 })
 // POST /posts/:postId/edit 更新文章
 router.post('/:postId/edit', checkLogin, function(req, res) {
