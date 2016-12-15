@@ -30,7 +30,7 @@ router.post('/', checkNotLogin, function (req, res, next) {
 		console.log('create user:');
 		console.log(user);
 		req.flash('success', '注册成功')
-		res.redirect('/posts')
+		res.redirect(303, '/posts')
 	}).catch(e => {
 		if(e.message.match('E11000 duplicate key')) {
 			req.flash('error', '用户名被占用')
@@ -38,8 +38,6 @@ router.post('/', checkNotLogin, function (req, res, next) {
 		}
 		next()
 	})
-	req.flash('success', '注册成功')
-	return res.redirect(303, '/posts')
 })
 
 module.exports = router
