@@ -1,6 +1,7 @@
 <%- include('common/header') %>
 
-<%- include('common/post-item') %>
-<%- include('common/post-item') %>
+<% posts.forEach(function(post) { %>
+    <%- include('common/post-item', { post }) %>
+<% }) %>
 
 <%- include('common/footer') %>

@@ -1,16 +1,33 @@
 let express = require('express')
 let router = express.Router()
 
+let PostModel = require('../models/posts')
 let checkLogin = require('../middlewares/check').checkLogin
 
 // GET /posts所有用户或者特定用户的文章页
 // eg: GET /posts?author=xxx
 router.get('/', function (req, res, next) {
-	res.render('posts', { title: "主页" })
+	PostModel.fetchPosts(req.query.author)
+		.then(posts => {
+			"use strict";
+			res.render('posts', { title: "主页", posts: posts })
+		})
+		.catch(next);
 })
+
 // POST /posts 发表一篇文章
 router.post('/', checkLogin, function (req, res, next) {
-	res.send(req.flash())
+	let author = req.session.user._id;
+	let { title, content } = req.fields;
+
+	PostModel.create({ author, title, content })
+		.then(result => {
+			"use strict";
+			let post = result.ops[0];
+			req.flash('success', '发布成功');
+			res.redirect(`/posts/${post._id}`);
+		})
+		.catch(next)
 })
 // GET /posts/create 发表文章页
 router.get('/create', checkLogin, function (req, res, next) {
@@ -19,10 +36,23 @@ router.get('/create', checkLogin, function (req, res, next) {
 	})
 })
 // GET /posts/:postId 文章详情页
-router.get('/:postId', function(req, res) {
-	res.render('post', {
-		title: '一篇文章'
+router.get('/:postId', function(req, res, next) {
+	let postId = req.params.postId;
+
+	Promise.all([
+		PostModel.fetchPostById(postId),
+		PostModel.incPv(postId)
+	]).then(result => {
+		"use strict";
+		var post = result[0];
+		if(!post) throw new Error('该文章不存在');
+		res.render('post', {
+			title: '一篇文章',
+			post
+		})
 	})
+
+
 })
 // GET /posts/:postId/edit 更新文章页
 router.get('/:postId/edit', checkLogin, function(req, res) {

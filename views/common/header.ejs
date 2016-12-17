@@ -9,11 +9,15 @@
   <body>
   <header class="container container-header">
   	<nav class="header-nav pull-right">
-  		<a href="/signin" class="text-danger">请登录</a>
-  		<a href="/signup">注册</a>
-
-  		<span class="text-success">zhangsan</span>
-  		<a href="/create" class="text-primary">发布新文章</a>
+  		<% if(user) { %>
+			<span class="text-success"></span>
+			<a href="/posts?author=<%= user._id %>"><%= user.name %></a>
+			<a href="/posts/create" class="text-primary">发布新文章</a>
+			<a href="/signout">登出</a>
+		<% } else { %>
+			<a href="/signin" class="text-danger">请登录</a>
+  			<a href="/signup">注册</a>
+		<% } %>
   	</nav>
   	<div class="header-title text-center">
   		<h1 class="text-success">BlogN</h1>

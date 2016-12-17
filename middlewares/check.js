@@ -1,12 +1,16 @@
 module.exports = {
 	checkLogin(req, res, next) {
-		req.flash('error', 'not login')
-		// return res.redirect('/signin')
-		next()
+		if(!req.session.user) {
+			req.flash('error', '请先登录');
+			return res.redirect(303, '/signin')
+		}
+		next();
 	},
 	checkNotLogin(req, res, next) {
-		// req.flash('error', 'user logined')
-		// return res.redirect('/posts')
-		next()
+		if(req.session.user) {
+			req.flash('error', '你已登录')
+			return res.redirect(303, '/posts')
+		}
+		next();
 	}
 };

@@ -2,12 +2,12 @@
 <div class="container post-container">
 	<div class="row">
 		<div class="col-md-2">
-			<a href="/posts?author=zhangsan" class="avatar">
-				<img class="avatar-cover" src="/images/avatar.jpg" alt="">
+			<a href="/posts?author=<%= user._id %>" class="avatar">
+				<img class="avatar-cover" src="/images/<%= user.avatar %>" alt="">
 			</a>
 		</div>
 		<div class="col-md-10 post-wrapper">
-			<form role="form" action="/edit" method="post">
+			<form role="form" action="/posts" method="post">
 				<div class="form-group">
 					<label for="post-title">标题<span class="text-danger">*</span></label>
 					<input type="text" class="form-control" id="post-title" name="title">
