@@ -1,8 +1,8 @@
 <div class="container post-container">
 	<div class="row">
 		<div class="col-md-2">
-			<a href="/posts?author=zhangsan" class="avatar">
-				<img class="avatar-cover" src="/images/avatar.jpg" alt="">
+			<a href="/posts?author=<%= post.author._id %>" class="avatar">
+				<img class="avatar-cover" src="/images/<%= post.author.avatar %>" alt="">
 			</a>
 		</div>
 		<div class="col-md-10 post-wrapper">

@@ -6,6 +6,6 @@ module.exports = {
 		key: 'blogN',
 		maxAge: 2550000
 	},
-	mongodb: 'mongodb://10.77.42.131:27017/myblog'
+	mongodb: 'mongodb://127.0.0.1:27017/myblog'
 	// mongodb: 'mongodb://blog:blog@ds159767.mlab.com:59767/blogs'
 };

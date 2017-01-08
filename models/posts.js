@@ -5,9 +5,10 @@ let Post = require('../lib/mongo').Post
 Post.plugin('content2Html', {
    afterFind(posts) {
        if(!posts) return [];
-       return posts.forEach(post => {
+       return posts.map(post => {
            "use strict";
-           post.content = marked(post.content)
+           post.content = marked(post.content);
+           return post;
        })
    },
     afterFindOne(post) {
@@ -27,7 +28,7 @@ module.exports = {
         return Post
             .findOne({ _id: postId })
             .populate({ path: 'author', model: 'User' })
-            .addCreateAt()
+            .addCreatedAt()
             .content2Html()
             .exec(err => {
                 if(err) console.log(err);
@@ -40,15 +41,33 @@ module.exports = {
             .find(query)
             .populate({ path: 'author', model: 'User' })
             .sort({ _id: -1 })
-            .addCreateAt()
+            .addCreatedAt()
             .content2Html()
             .exec((err, posts) => {
                 err && console.log(err);
+                console.log(posts);
             });
     },
     incPv(postId) {
         "use strict";
         return Post.update({_id: postId}, { $inc: { pv: 1 } })
             .exec();
+    },
+    // 获取未加工的文章, 用于修改
+    fetchRawPostById(postId) {
+        "use strict";
+        return Post
+            .findOne({ _id: postId })
+            .populate({ path: 'author', model: 'User' })
+            .exec();
+    },
+    // 更新一篇文章
+    updatePost(postId, author, data) {
+        return Post.update({ author, _id: postId }, { $set: data }).exec();
+
+    },
+    // 删除一篇文章
+    deletePost(postId, author) {
+        return Post.remove({ author, _id: postId }).exec();
     }
 }

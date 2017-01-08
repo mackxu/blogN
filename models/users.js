@@ -8,7 +8,7 @@ module.exports = {
 		"use strict";
 		return User
 			.findOne({ name })
-			.addCreateAt()
+			.addCreatedAt()
 			.exec();
 	}
 }
