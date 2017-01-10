@@ -1,5 +1,6 @@
 let marked = require('marked');
-let Post = require('../lib/mongo').Post
+let Post = require('../lib/mongo').Post;
+let CommentModel = require('./comments');
 
 // 将post的content从markdown转换成html
 Post.plugin('content2Html', {
@@ -17,6 +18,25 @@ Post.plugin('content2Html', {
    }
 });
 
+// 给post添加留言数commentsCount
+Post.plugin('addCommentsCount', {
+    afterFind(posts) {
+        return Promise.all(posts.map(post => {
+            "use strict";
+            return CommentModel.fetchCommentsCount(post._id).then(count => {
+                post.commentsCount = count;
+                return post;
+            })
+        }))
+    },
+    afterFindOne(post) {
+        if(!post) return post;
+        return CommentModel.fetchCommentsCount(post._id).then(count => {
+            post.commentsCount = count;
+            return post;
+        })
+    }
+});
 
 module.exports = {
     create(post) {
@@ -29,6 +49,7 @@ module.exports = {
             .findOne({ _id: postId })
             .populate({ path: 'author', model: 'User' })
             .addCreatedAt()
+            .addCommentsCount()
             .content2Html()
             .exec(err => {
                 if(err) console.log(err);
@@ -42,6 +63,7 @@ module.exports = {
             .populate({ path: 'author', model: 'User' })
             .sort({ _id: -1 })
             .addCreatedAt()
+            .addCommentsCount()
             .content2Html()
             .exec((err, posts) => {
                 err && console.log(err);
@@ -68,6 +90,12 @@ module.exports = {
     },
     // 删除一篇文章
     deletePost(postId, author) {
-        return Post.remove({ author, _id: postId }).exec();
+        return Post.remove({ author, _id: postId })
+            .exec()
+            .then(res => {
+                if(res.result.ok && res.result.n > 0) {
+                    return CommentModel.delCommentsByPostId(postId);
+                }
+            })
     }
-}
+};

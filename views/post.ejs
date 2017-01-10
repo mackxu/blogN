@@ -6,46 +6,38 @@
 		<div class="col-md-2"></div>
 		<div class="col-md-10">
 			<h3>留言</h3>
-			<div class="container container-commnet">
-				<div class="col-md-1">
-					<a href="/posts?author=zhangsan" class="avatar avatar-comment">
-						<img class="avatar-cover" src="/images/avatar.jpg" alt="">
-					</a>
-				</div>
-				<div class="col-md-11">
-					<div class="comment">
-						<div class="comment-head">
-							<strong>mackxu</strong>&nbsp;2016-12-10
-							<a class="btn btn-link" href="posts/1/1/remove">删除</a>
+			<% comments.forEach(function (commnet) { %>
+				<div class="container container-commnet">
+					<div class="col-md-1">
+						<a href="/posts?author=<%= commnet.author._id %>" class="avatar avatar-comment">
+							<img class="avatar-cover" src="/images/<%= commnet.author.avatar %>" alt="">
+						</a>
+					</div>
+					<div class="col-md-11">
+						<div class="comment">
+							<div class="comment-head">
+								<strong><%= commnet.author.name %></strong>&nbsp;<%= commnet.author.created_at %>
+								<% if(user && commnet.author._id && user._id.toString() === commnet.author._id.toString()) { %>
+									<a class="btn btn-link" href="/posts/<%= post._id %>/comment/<%= commnet._id %>/remove">删除</a>
+								<% } %>
 							</div>
-						<div class="comment-content">
-							沙发
+							<div class="comment-content"><%- commnet.content %></div>
 						</div>
 					</div>
 				</div>
-			</div>
-			<div class="container container-commnet">
-				<div class="col-md-1">
-					<a href="/posts?author=zhangsan" class="avatar avatar-comment">
-						<img class="avatar-cover" src="/images/avatar.jpg" alt="">
-					</a>
-				</div>
-				<div class="col-md-11">
-					<div class="comment">
-						<div class="comment-head"><strong>mackxu</strong>&nbsp;2016-12-10</div>
-						<div class="comment-content">
-							沙发, 沙发, 沙发
-						</div>
+			<% }) %>
+
+
+			<% if(user) {%>
+				<!-- 留言框 -->
+				<form method="post" role="form" action="/posts/<%= post._id %>/comment">
+					<div class="form-group">
+						<textarea name="content" class="form-control" id="post-content" rows="4">good work</textarea>
 					</div>
-				</div>
-			</div>
-			<!-- 留言框 -->
-			<form action="post" role="form">
-				<div class="form-group">
-					<textarea name="content" class="form-control" id="post-content" rows="4">good work</textarea>
-				</div>
-				<button type="submit" class="btn btn-success">留言</button>
-			</form>
+					<button type="submit" class="btn btn-success">留言</button>
+				</form>
+			<% } %>
+
 		</div>
 	</div>
 

@@ -12,9 +12,9 @@ Comment.plugin('content2Html', {
 });
 
 module.exports = {
-    create() {
-        "use strict";
-
+    // 创建新留言
+    create(content) {
+        return Comment.create(content).exec();
     },
     fetchComments(postId) {
         "use strict";
@@ -25,16 +25,16 @@ module.exports = {
             .content2Html()
             .exec();
     },
+    // 查找某文章的留言数
     fetchCommentsCount(postId) {
-        "use strict";
         return Comment.count({ postId }).exec();
     },
+    // 通过文章id，删除该文章下的所有留言
     delCommentsByPostId(postId) {
-        "use strict";
-
+        return Comment.remove({ postId }).exec();
     },
+    // 通过用户id、留言id删除一条留言
     delCommentByCommentId(commentId, author) {
-        "use strict";
-
+        return Comment.remove({ author, _id: commentId }).exec();
     }
 };

@@ -1,7 +1,8 @@
 let express = require('express')
 let router = express.Router()
 
-let PostModel = require('../models/posts')
+let PostModel = require('../models/posts');
+let CommentModel = require('../models/comments');
 let checkLogin = require('../middlewares/check').checkLogin
 
 // GET /posts所有用户或者特定用户的文章页
@@ -41,15 +42,17 @@ router.get('/:postId', function(req, res, next) {
 	let postId = req.params.postId;
 
 	Promise.all([
-		PostModel.fetchPostById(postId),
-		PostModel.incPv(postId)
+		PostModel.fetchPostById(postId),			// 获取文章信息
+		CommentModel.fetchComments(postId),			// 获取留言部分
+		PostModel.incPv(postId)						// pv加1
 	]).then(result => {
 		"use strict";
 		var post = result[0];
 		if(!post) throw new Error('该文章不存在');
 		res.render('post', {
 			title: '一篇文章',
-			post
+			post,
+			comments: result[1]
 		})
 	}).catch(next);
 });
@@ -101,17 +104,31 @@ router.get('/:postId/remove', checkLogin, function(req, res, next) {
 			res.redirect('/posts');
 		})
 		.catch(next);
-
 });
 
 
 // POST /posts/:postId/comment 创建一条留言
 router.post('/:postId/comment', checkLogin, function(req, res, next) {
-	res.send(req.flash())
-})
+	CommentModel.create({
+		content: req.fields.content,
+		postId: req.params.postId,
+		author: req.session.user._id
+	}).then(() => {
+		req.flash('success', '留言成功！');
+		res.redirect('back');
+	}).catch(next);
+});
+
 // GET /posts/:postId/comment/:commentId/remove 删除一条留言
 router.get('/:postId/comment/:commentId/remove', checkLogin, function(req, res, next) {
-	res.send(req.flash())
-})
+	let cId = req.params.commentId;
+	let author = req.session.user._id;
+	CommentModel.delCommentByCommentId(cId, author)
+		.then(() => {
+			req.flash('success', '删除留言成功');
+			res.redirect('back');
+		})
+		.catch(next);
+});
 
 module.exports = router;
